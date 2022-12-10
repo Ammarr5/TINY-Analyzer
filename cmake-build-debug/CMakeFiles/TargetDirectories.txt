@@ -1,0 +1,3 @@
+C:/Users/abdal/CLionProjects/TINY Code Generation/cmake-build-debug/CMakeFiles/TINY_Code_Generation.dir
+C:/Users/abdal/CLionProjects/TINY Code Generation/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/abdal/CLionProjects/TINY Code Generation/cmake-build-debug/CMakeFiles/rebuild_cache.dir
