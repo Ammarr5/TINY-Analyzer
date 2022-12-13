@@ -12,10 +12,18 @@ Start Match
 Start Stmt
 Start IfStmt
 Start Match
-[7] 0 (Num)
+[7] fact (ID)
 Start Expr
 Start MathExpr
 Start Term
+Start Factor
+Start NewExpr
+Start Match
+[7] * (Times)
+End NewExpr
+End Factor
+Start Match
+[7] x (ID)
 Start Factor
 Start NewExpr
 Start Match
@@ -25,7 +33,7 @@ End Factor
 End Term
 End MathExpr
 Start Match
-[7] x (ID)
+[7] 3 (Num)
 Start MathExpr
 Start Term
 Start Factor
@@ -84,6 +92,18 @@ End NewExpr
 End Factor
 Start Match
 [10] x (ID)
+Start Factor
+Start NewExpr
+Start Match
+[10] < (LessThan)
+End NewExpr
+End Factor
+End Term
+End MathExpr
+Start Match
+[10] 3 (Num)
+Start MathExpr
+Start Term
 Start Factor
 Start NewExpr
 Start Match

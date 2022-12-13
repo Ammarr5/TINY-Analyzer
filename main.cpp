@@ -827,13 +827,20 @@ void checkType(TreeNode* root) {
     switch (root->node_kind) {
         case IF_NODE:
             if(root->child[0]->expr_data_type != BOOLEAN) {
-                printf("Error: 'if' should be followed by a boolean expression\n");
+                printf("line %d: ", root->child[0]->line_num);
+                printf("'if' should be followed by a boolean expression\n");
             }
             break;
         case ASSIGN_NODE:
             if(root->child[0]->expr_data_type != INTEGER) {
                 printf("line %d: ", root->child[0]->line_num);
                 printf("right hand side of assignment must be a number expression\n");
+            }
+            break;
+        case REPEAT_NODE:
+            if(root->child[1]->expr_data_type != BOOLEAN) {
+                printf("line %d: ", root->child[0]->line_num);
+                printf("'until' should be followed by a boolean expression\n");
             }
             break;
         default:
