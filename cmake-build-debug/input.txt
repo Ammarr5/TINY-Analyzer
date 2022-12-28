@@ -3,6 +3,7 @@
   compute factorial
 }
 
+y := 2^3;
 read x; {input an integer}
 if 0<x then {compute only if x>=1}
   fact:=1;
@@ -10,5 +11,6 @@ if 0<x then {compute only if x>=1}
     fact := fact * x;
     x:=x-1
   until x=0;
-  write fact {output factorial}
+  write fact; {output factorial}
+  write y
 end

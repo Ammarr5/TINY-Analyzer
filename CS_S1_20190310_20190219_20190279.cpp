@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include "cmath"
 using namespace std;
 
 /*
@@ -856,12 +857,117 @@ void checkType(TreeNode* root) {
     }
 }
 
+/**
+ *
+ * @param tree Annotated syntax tree (root)
+ * @param table
+ * @param variables
+ * @return
+ */
+int eval(TreeNode* tree, SymbolTable* table, int* variables)
+{
+    if(tree->node_kind==NUM_NODE) {
+        return tree->num;
+    }
+    if(tree->node_kind==ID_NODE) {
+        return variables[table->Find(tree->id)->memloc];
+    }
+
+    int a = eval(tree->child[0], table, variables);
+    int b = eval(tree->child[1], table, variables);
+
+    if(tree->oper==EQUAL) {
+        return a == b;
+    }
+    if(tree->oper==LESS_THAN) {
+        return a < b;
+    }
+    if(tree->oper==PLUS) {
+        return a + b;
+    }
+    if(tree->oper==MINUS) {
+        return a - b;
+    }
+    if(tree->oper==TIMES) {
+        return a * b;
+    }
+    if(tree->oper==DIVIDE) {
+        return a / b;
+    }
+    if(tree->oper==POWER) {
+        return pow(a,b);
+    }
+    throw 0;
+}
+
+/**
+ *
+ * @param tree Annotated syntax tree (root)
+ * @param table
+ * @param variables
+ */
+void simulateRun(TreeNode* tree, SymbolTable* table, int* variables) {
+    if(tree->node_kind == IF_NODE) {
+        int condition = eval(tree->child[0], table, variables);
+        if(condition) {
+            simulateRun(tree->child[1], table, variables);
+        }
+        else if(tree->child[2]) {
+            simulateRun(tree->child[2], table, variables);
+        }
+    }
+
+    if(tree->node_kind == ASSIGN_NODE) {
+        int v=eval(tree->child[0], table, variables);
+        variables[table->Find(tree->id)->memloc]=v;
+    }
+
+    if(tree->node_kind==READ_NODE) {
+        printf("Type value for %s: ", tree->id);
+        scanf("%d", &variables[table->Find(tree->id)->memloc]);
+    }
+
+    if(tree->node_kind==WRITE_NODE) {
+        int v=eval(tree->child[0], table, variables);
+        printf("(Write): %d\n", v);
+    }
+
+    if(tree->node_kind==REPEAT_NODE) {
+        do {
+            simulateRun(tree->child[0], table, variables);
+        }
+        while(!eval(tree->child[1], table, variables));
+    }
+    if(tree->sibling) {
+        simulateRun(tree->sibling, table, variables);
+    }
+}
+
+/**
+ *
+ * @param tree Annotated syntax tree (root)
+ * @param table
+ */
+void simulateRun(TreeNode* tree, SymbolTable* table) {
+    int i;
+    int* variables=new int[table->num_vars];
+    for(i=0;i<table->num_vars;i++) {
+        variables[i]=0;
+    }
+    simulateRun(tree, table, variables);
+    delete[] variables;
+}
+
 int main() {
     CompilerInfo* pci = new CompilerInfo("input.txt", "output.txt", "debug.txt");
     TreeNode* tree = Parse(pci);
     SymbolTable* table = constructSymbolTable(tree);
+    printf("********************* Symbol Table *********************************************\n");
     table->Print();
     checkType(tree);
+    printf("********************* Tree *****************************************************\n");
     PrintTree(tree);
+    printf("********************* Program Run **********************************************\n");
+    simulateRun(tree, table);
     return 0;
 }
